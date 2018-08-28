@@ -1,4 +1,4 @@
-package main
+package db
 
 type IFriendMgtStore interface {
 	ConnectAsFriend(user1, user2 User) error

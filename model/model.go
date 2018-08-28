@@ -1,3 +1,3 @@
-package main
+package model
 
 type User string

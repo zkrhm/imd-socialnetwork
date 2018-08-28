@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -17,10 +16,11 @@ var _ = Describe("Friend Management Specs", func() {
 
 		app := NewApp()
 		app.Initialize()
-		rr := httptest.NewRecorder()
-		handler := app.Router
+		handler := http.HandlerFunc(app.ConnectAsFriend)
+
 		Context("Normal Flow - Connecting two user", func() {
 			It("return success status", func() {
+				rr := httptest.NewRecorder()
 				const reqBody = `
 					{
 						"friends":["johnathan@example.com","maria@example.com"]
@@ -39,6 +39,7 @@ var _ = Describe("Friend Management Specs", func() {
 
 		Context("Alternate Flow - Passing only one user", func() {
 			It("Complain about parameters", func() {
+				rr := httptest.NewRecorder()
 				reqBody := `{"friends":["johnathan@example.com"]}`
 				req, err := http.NewRequest("POST", "/connect", strings.NewReader(reqBody))
 				if err != nil {
@@ -48,13 +49,13 @@ var _ = Describe("Friend Management Specs", func() {
 
 				const expectedResponse = `{"message":"Parameter of friends should exactly has 2 element"}`
 				Expect(rr.Code).To(Equal(422))
-				log.Print(rr.Body.String())
 				Expect(rr.Body.String()).Should(MatchJSON(expectedResponse))
 			})
 		})
 
 		Context("Alternate Flow - Passing more than two user", func() {
 			It("Complains about parameters", func() {
+				rr := httptest.NewRecorder()
 				const reqBody = `
 					{
 						"friends":["johnathan@example.com","maria@example.com","mercedes@example.com"]

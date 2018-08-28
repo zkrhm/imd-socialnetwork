@@ -24,6 +24,10 @@ func jsonMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func (app *App) UseDb(db *IFriendMgtStore) {
+	app.DB = db
+}
+
 func (app *App) Initialize() {
 	app.initRoutes()
 }
