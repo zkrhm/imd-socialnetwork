@@ -2,6 +2,26 @@
 
 
 [[projects]]
+  digest = "1:39ce860cec6c0feee0493748e660f923f0843966e7bfa513cebaf31ecaf1a8be"
+  name = "github.com/cayleygraph/cayley"
+  packages = [
+    ".",
+    "clog",
+    "graph",
+    "graph/iterator",
+    "graph/memstore",
+    "graph/path",
+    "graph/shape",
+    "quad",
+    "voc",
+    "voc/schema",
+    "writer",
+  ]
+  pruneopts = "UT"
+  revision = "431ee2850fa29f8f7dfa0de6a03c07237871d504"
+  version = "v0.7.4"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -153,6 +173,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/cayleygraph/cayley",
     "github.com/gorilla/mux",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
