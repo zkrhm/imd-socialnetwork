@@ -13,7 +13,7 @@ import (
 )
 
 var _ = Describe("Friend Management Specs", func() {
-	FDescribe("R1 - As a user I need to create friend connection between two email addresses", func() {
+	Describe("R1 - As a user I need to create friend connection between two email addresses", func() {
 
 		app := NewApp()
 		store, _ := db.NewCayleyStore()
@@ -83,26 +83,26 @@ var _ = Describe("Friend Management Specs", func() {
 			})
 		})
 
-		Context("Connecting already connected two user", func() {
+		PContext("Connecting already connected two user", func() {
 			It("Complains that users already friends", func() {
 
 			})
 		})
 
-		Context("Connecting non-existent user", func() {
+		PContext("Connecting non-existent user", func() {
 			It("Complains that non-existent user are not available on the system", func() {
 
 			})
 		})
 
-		Context("Connecting blocked users", func() {
+		PContext("Connecting blocked users", func() {
 			It("Throws error that the user cannot be connected because of blockage", func() {
 
 			})
 		})
 	})
 
-	Describe("R2 - I need to retrieve friend list of an email user", func() {
+	PDescribe("R2 - I need to retrieve friend list of an email user", func() {
 		Context("Normal Flow - It fetch friend list of email address who already has friend", func() {
 			It("returns list of friends", func() {
 
@@ -123,7 +123,7 @@ var _ = Describe("Friend Management Specs", func() {
 
 	})
 
-	Describe("R3 - I need to retrieve common friends between two email address", func() {
+	PDescribe("R3 - I need to retrieve common friends between two email address", func() {
 		Context("NF ", func() {
 			It("returns common friends of two email address", func() {
 
@@ -143,7 +143,7 @@ var _ = Describe("Friend Management Specs", func() {
 		})
 	})
 
-	Describe("R4 - I need API to subscribe to updates from email address", func() {
+	PDescribe("R4 - I need API to subscribe to updates from email address", func() {
 		Context("Normal Flow", func() {
 			It("returns status 'succeess'", func() {
 
@@ -151,7 +151,7 @@ var _ = Describe("Friend Management Specs", func() {
 		})
 	})
 
-	Describe("R5 - I need an API to block updates from an email address", func() {
+	PDescribe("R5 - I need an API to block updates from an email address", func() {
 		Context("Normal Flow", func() {
 			It("returns status 'success'", func() {
 
@@ -159,7 +159,7 @@ var _ = Describe("Friend Management Specs", func() {
 		})
 	})
 
-	Describe("R6 - I need an API to retrieve all email address that can receive update from an email address", func() {
+	PDescribe("R6 - I need an API to retrieve all email address that can receive update from an email address", func() {
 		Context("Normal Flow", func() {
 			It("returns list of subscrbers", func() {
 
