@@ -51,9 +51,10 @@ func (s *CayleyStore) ShowAllRelations() []interface{} {
 	return ret
 }
 
-func (s *CayleyStore) AddUser(user User) {
+func (s *CayleyStore) AddUser(user User) error {
 	s.UserCount += 1
 	s.UserStore[user] = s.UserCount
+	return nil
 }
 
 func (s *CayleyStore) getUserId(user User) (int, error) {
@@ -76,8 +77,6 @@ func (s *CayleyStore) isBlocking(user1, user2 User) (bool, error) {
 	} else {
 		return true, nil
 	}
-
-	return false, nil
 }
 
 func (s *CayleyStore) whoisBlocking(user User) ([]User, error){

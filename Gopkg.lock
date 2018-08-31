@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:801ee2a0859a55bc95c34976b2fbe360da4a40bb3f9d39ab20bc9725c91ece31"
+  name = "github.com/badoux/checkmail"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0755fe2dc241caebab64327c352006712f6a55c4"
+
+[[projects]]
   digest = "1:39ce860cec6c0feee0493748e660f923f0843966e7bfa513cebaf31ecaf1a8be"
   name = "github.com/cayleygraph/cayley"
   packages = [
@@ -58,6 +66,14 @@
   ]
   pruneopts = "UT"
   revision = "a1dbeea552b7c8df4b542c66073e393de198a800"
+
+[[projects]]
+  digest = "1:1919e36a53e2297eca9d3516ca358dec92257fe0de3361351e09400c91d65d5e"
+  name = "github.com/oleiade/reflections"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2b6ec3da648e3e834dc41bad8d9ed7f2dc6a9496"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:42e29deef12327a69123b9cb2cb45fee4af5c12c2a23c6e477338279a052703f"
@@ -181,11 +197,13 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/badoux/checkmail",
     "github.com/cayleygraph/cayley",
     "github.com/cayleygraph/cayley/graph",
     "github.com/cayleygraph/cayley/quad",
     "github.com/deckarep/golang-set",
     "github.com/gorilla/mux",
+    "github.com/oleiade/reflections",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
   ]

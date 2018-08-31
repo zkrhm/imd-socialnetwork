@@ -3,6 +3,7 @@ package db
 import . "github.com/zkrhm/imd-socialnetwork/model"
 
 type IFriendMgtStore interface {
+	AddUser(user User) error
 	ConnectAsFriend(user1, user2 User) error
 	GetFriendList(user1 User) ([]User, error)
 	CommonFriends(user1, user2 User) ([]User, error)

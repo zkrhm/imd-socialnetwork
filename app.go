@@ -6,11 +6,12 @@ import (
 
 	"github.com/gorilla/mux"
 	. "github.com/zkrhm/imd-socialnetwork/db"
+	"github.com/zkrhm/imd-socialnetwork/model"
 )
 
 type App struct {
 	Router *mux.Router
-	DB     *IFriendMgtStore
+	DB     IFriendMgtStore
 }
 
 func NewApp() *App {
@@ -26,11 +27,39 @@ func jsonMiddleware(next http.Handler) http.Handler {
 }
 
 func (app *App) UseDb(db IFriendMgtStore) {
-	app.DB = &db
+	app.DB = db
 }
 
 func (app *App) Initialize() {
+	app.dataPreload()
 	app.initRoutes()
+}
+
+func (app *App) dataPreload(){
+	
+	u := make(map[string]string)
+	u["bob"] = "bob@example.com"
+	u["alice"] = "alice@example.com"
+	u["greg"] = "greg@example.com"
+	u["fred"] = "fred@example.com"
+	u["emily"] = "emily@example.com"
+	u["dani"] = "dani@example.com"
+	u["charlie"] = "charlie@example.com"
+	u["jonathan"] = "jonathan@example.com"
+	u["maria"] = "maria@example.com"
+
+	for _, v := range u {
+		app.DB.AddUser(model.User(v))
+	}
+
+	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["alice"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["charlie"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["fred"]))
+	app.DB.ConnectAsFriend(model.User(u["charlie"]),model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["greg"]),model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["fred"]),model.User(u["greg"]))
+	app.DB.ConnectAsFriend(model.User(u["fred"]),model.User(u["emily"]))
 }
 
 func (app *App) initRoutes() {

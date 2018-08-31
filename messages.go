@@ -1,11 +1,14 @@
 package main
 
+
 type ConnectFriendRequest struct {
 	Friends []string `json:"friends"`
 }
 
 type ConnectFriendResponse struct {
 	Success bool `json:"success"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }
 
 type FriendListRequest struct {
@@ -16,6 +19,8 @@ type FriendListResponse struct {
 	Success bool     `json:"success"`
 	Friends []string `json:"friends:`
 	Count   int      `json:"count"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }
 
 type CommonFriendRequest struct {
@@ -25,7 +30,9 @@ type CommonFriendRequest struct {
 type CommonFriendResponse struct {
 	Success bool     `json:"success"`
 	Friends []string `json:"friends"`
-	Count   bool     `json:"count"`
+	Count   int     `json:"count"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }
 
 type SubscribeRequest struct {
@@ -35,6 +42,8 @@ type SubscribeRequest struct {
 
 type SubscribeResponse struct {
 	Success bool `json:"success"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }
 
 type BlockRequest struct {
@@ -44,6 +53,8 @@ type BlockRequest struct {
 
 type BlockResponse struct {
 	Success bool `json:"success"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }
 
 type UpdateRequest struct {
@@ -54,4 +65,6 @@ type UpdateRequest struct {
 type UpdateResponse struct {
 	Success    bool     `json:"success"`
 	Recipients []string `json:"recipients"`
+	Message string `json:"message,omitempty"`
+	Code int `json:"code,omitempty"`
 }

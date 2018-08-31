@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"github.com/oleiade/reflections"
 )
 
 func GetRequest(r *http.Request, reqObj interface{}) error {
@@ -19,6 +20,32 @@ func GetRequest(r *http.Request, reqObj interface{}) error {
 }
 
 func WriteReponse(w http.ResponseWriter, resObj interface{}) error {
+
+	
+	hasField , err := reflections.HasField(resObj, "Code")
+	if err != nil {
+		return err
+	}
+
+	if hasField{
+		
+		val , err := reflections.GetField(resObj,"Code")
+		if err != nil {
+			return err
+		}
+		fmt.Println("has code field, code value : ", val.(int))
+
+		code := val.(int)
+
+		if(code == 0){
+			code = 200
+		}
+
+		w.WriteHeader(code)
+	}else{
+		w.WriteHeader(http.StatusOK)
+	}
+		
 	b, err := json.Marshal(resObj)
 	if err != nil {
 		return err

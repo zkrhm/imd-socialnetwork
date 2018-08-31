@@ -6,15 +6,18 @@ import (
 	"strings"
 
 	. "github.com/zkrhm/imd-socialnetwork"
+	"github.com/zkrhm/imd-socialnetwork/db"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Friend Management Specs", func() {
-	Describe("R1 - As a user I need to create friend connection between two email addresses", func() {
+	FDescribe("R1 - As a user I need to create friend connection between two email addresses", func() {
 
 		app := NewApp()
+		store, _ := db.NewCayleyStore()
+		app.UseDb(store)
 		app.Initialize()
 		handler := http.HandlerFunc(app.ConnectAsFriend)
 
@@ -23,7 +26,7 @@ var _ = Describe("Friend Management Specs", func() {
 				rr := httptest.NewRecorder()
 				const reqBody = `
 					{
-						"friends":["johnathan@example.com","maria@example.com"]
+						"friends":["jonathan@example.com","maria@example.com"]
 					}`
 				req, err := http.NewRequest("POST", "/connect", strings.NewReader(reqBody))
 				if err != nil {
@@ -47,7 +50,11 @@ var _ = Describe("Friend Management Specs", func() {
 				}
 				handler.ServeHTTP(rr, req)
 
-				const expectedResponse = `{"message":"Parameter of friends should exactly has 2 element"}`
+				const expectedResponse = `{
+					"success": false,
+					"message": "Parameter of friends should exactly has 2 element",
+					"code": 422
+				  }`
 				Expect(rr.Code).To(Equal(422))
 				Expect(rr.Body.String()).Should(MatchJSON(expectedResponse))
 			})
@@ -66,7 +73,11 @@ var _ = Describe("Friend Management Specs", func() {
 				}
 				handler.ServeHTTP(rr, req)
 
-				const expectedResponse = `{"message":"Parameter of friends should exactly has 2 element"}`
+				const expectedResponse = `{
+					"success": false,
+					"message":"Parameter of friends should exactly has 2 element",
+					"code": 422
+					}`
 				Expect(rr.Code).To(Equal(422))
 				Expect(rr.Body.String()).Should(MatchJSON(expectedResponse))
 			})
