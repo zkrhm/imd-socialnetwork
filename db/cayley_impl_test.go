@@ -118,14 +118,6 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 				Expect(err).Should(HaveOccurred())
 			})
 		})
-
-		PContext("Alternate Flow - connecting blocking user", func() {
-			It("Should complains that the user is blocked and cannot be connected as a friend", func() {
-				err := cayleyStore.ConnectAsFriend("john@example.com", "blockinguser@example.com")
-				Expect(err).Should(HaveOccurred())
-			})
-
-		})
 	})
 
 	Describe("SPEC 2: Get Friend List", func() {
@@ -174,8 +166,6 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 
 				charliesFriend, _ := store.GetFriendList("charlie@example.com")
 				fredsFriend, _ := store.GetFriendList("fred@example.com")
-
-				fmt.Println("charlies friend : ", charliesFriend)
 
 				sCharliesFriend := ConvertToStringArray(charliesFriend)
 				sFredFriend := ConvertToStringArray(fredsFriend)
@@ -349,7 +339,7 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 		})
 	})
 
-	FDescribe("SPEC 6 : List Post recipients", func() {
+	Describe("SPEC 6 : List Post recipients", func() {
 
 		Context("NF - show list of follower", func() {
 

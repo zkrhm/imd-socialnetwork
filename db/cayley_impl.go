@@ -8,7 +8,6 @@ import (
 	"github.com/cayleygraph/cayley/quad"
 	. "github.com/zkrhm/imd-socialnetwork/model"
 	"regexp"
-	"fmt"
 	"github.com/deckarep/golang-set"
 )
 
@@ -208,7 +207,7 @@ func (s *CayleyStore) BlockUpdate(blocker, blocked User) error {
 func (s *CayleyStore) getMentions(message string) ([]User, error) {
 	re := regexp.MustCompile("[\\w][\\w\\-]+@[\\w\\-]+(\\.[\\w]{2,})+")
 	foundEmails := re.FindAllString(message,-1)
-	fmt.Println("found emails :",foundEmails)
+	
 	var mentionedUsers []User
 	for _, email := range foundEmails {
 		user := User(string(email))

@@ -25,8 +25,8 @@ func jsonMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func (app *App) UseDb(db *IFriendMgtStore) {
-	app.DB = db
+func (app *App) UseDb(db IFriendMgtStore) {
+	app.DB = &db
 }
 
 func (app *App) Initialize() {
@@ -40,8 +40,8 @@ func (app *App) initRoutes() {
 	router.HandleFunc("/friend-list", app.GetFriendList)
 	router.HandleFunc("/common-friends", app.GetCommonFriends)
 	router.HandleFunc("/subscribe", app.Subsribe)
-	router.HandleFunc("/unsubscribe", app.Unsubscribe)
-	router.HandleFunc("/get-subscribers", app.GetSubscribers)
+	router.HandleFunc("/block", app.Block)
+	router.HandleFunc("/post-update", app.PostUpdate)
 	router.Use(jsonMiddleware)
 
 	app.Router = router

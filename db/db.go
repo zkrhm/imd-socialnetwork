@@ -8,6 +8,6 @@ type IFriendMgtStore interface {
 	CommonFriends(user1, user2 User) ([]User, error)
 	SubscribeTo(user1, user2 User) error
 	BlockUpdate(user1, user2 User) error
-	GetSubscibers(user1 User) ([]User, error)
+	GetSubscribers(user1 User) ([]User, error)
 	DoUpdate(user User, message string) ([]User, error)
 }
