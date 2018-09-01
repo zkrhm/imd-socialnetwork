@@ -148,9 +148,9 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 		})
 
 		Context("Alt Flow - get non connected people", func() {
-			It("returns empty list", func() {
+			It("returns empty list, with error thrown", func() {
 				friends, err := cayleyStore.GetFriendList("kelsey@example.com")
-				Expect(err).ShouldNot(HaveOccurred())
+				Expect(err).Should(HaveOccurred())
 				Expect(friends).To(BeEmpty())
 			})
 		})
@@ -187,10 +187,11 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 
 		Context("Alt Flow - Have no Common Friends", func() {
 			It("return empty list", func() {
-				By("Lookup to emily and charlie's friend")
+				By("Lookup to emily and charlie's friend - should be no friend and error 404 are thrown")
 				commonFriends, err := cayleyStore.CommonFriends("charlie@example.com", "emily@example.com")
 				sCommonFriends := ConvertToStringArray(commonFriends)
-				Expect(err).ShouldNot(HaveOccurred())
+
+				Expect(err).Should(HaveOccurred())
 				Expect(len(commonFriends) == 0).Should(BeTrue())
 				By(fmt.Sprintln("common friends : ", strings.Join(sCommonFriends, ",")))
 				Expect(commonFriends).Should(BeEquivalentTo([]User{}))
