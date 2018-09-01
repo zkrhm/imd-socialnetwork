@@ -17,8 +17,8 @@ type FriendListRequest struct {
 
 type FriendListResponse struct {
 	Success bool     `json:"success"`
-	Friends []string `json:"friends:`
-	Count   int      `json:"count"`
+	Friends []string `json:"friends,omitempty"`
+	Count   int      `json:"count,omitempty"`
 	Message string `json:"message,omitempty"`
 	Code int `json:"code,omitempty"`
 }
@@ -29,8 +29,8 @@ type CommonFriendRequest struct {
 
 type CommonFriendResponse struct {
 	Success bool     `json:"success"`
-	Friends []string `json:"friends"`
-	Count   int     `json:"count"`
+	Friends []string `json:"friends,omitempty"`
+	Count   int     `json:"count,omitempty"`
 	Message string `json:"message,omitempty"`
 	Code int `json:"code,omitempty"`
 }

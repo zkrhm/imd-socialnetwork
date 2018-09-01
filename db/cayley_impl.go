@@ -1,14 +1,15 @@
 package db
 
 import (
+	"net/http"
 	"encoding/json"
-	"errors"
 	"github.com/cayleygraph/cayley"
 	"github.com/cayleygraph/cayley/graph"
 	"github.com/cayleygraph/cayley/quad"
 	. "github.com/zkrhm/imd-socialnetwork/model"
 	"regexp"
 	"github.com/deckarep/golang-set"
+	"github.com/zkrhm/imd-socialnetwork/errors"
 )
 
 var (
@@ -60,7 +61,7 @@ func (s *CayleyStore) AddUser(user User) error {
 func (s *CayleyStore) getUserId(user User) (int, error) {
 	id := s.UserStore[user]
 	if id == 0 {
-		return id, errors.New("User not registered")
+		return id, errors.NewWithCode(404,"User not registered")
 	}
 	return id, nil
 }
@@ -92,12 +93,12 @@ func (s *CayleyStore) whoisBlocking(user User) ([]User, error){
 func (s *CayleyStore) ConnectAsFriend(user1, user2 User) error {
 	_, err := s.getUserId(user1)
 	if err != nil {
-		return err
+		return errors.NewWithCode(http.StatusNotFound,"user1 is not registered")
 	}
 
 	_, err2 := s.getUserId(user2)
 	if err2 != nil {
-		return errors.New("user 2 not registered")
+		return errors.NewWithCode(http.StatusNotFound, "user 2 not registered")
 	}
 
 	// cayley.StartPath(s.quadStore, nil).Has(rBlock, quad.IRI(user1))
@@ -106,14 +107,14 @@ func (s *CayleyStore) ConnectAsFriend(user1, user2 User) error {
 		return err
 	}
 	if blocking {
-		return errors.New("cannot connect as friend user 1 is blocking user 2")
+		return errors.NewWithCode(http.StatusForbidden, "cannot connect as friend user 1 is blocking user 2")
 	}
 	blocking, err = s.isBlocking(user2, user1)
 	if err != nil {
 		return err
 	}
 	if blocking {
-		return errors.New("cannot connect as friend, user2 is blocking user1")
+		return errors.NewWithCode(http.StatusForbidden, "cannot connect as friend, user2 is blocking user1")
 	}
 
 	err = s.SubscribeTo(user1,user2)
@@ -136,16 +137,22 @@ func (s *CayleyStore) GetFriendList(user1 User) ([]User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var friends []User
+	friends = []User{}
 	p := cayley.StartPath(s.quadStore, quad.String(user1)).Out(rFriendWith)
 	err = p.Iterate(nil).EachValue(nil, func(value quad.Value) {
 		friends = append(friends, User(quad.NativeOf(value).(string)))
 	})
-
 	if err != nil {
 		return nil, err
 	}
-	return friends, nil
+
+	if len(friends) == 0 {
+		err = errors.NewWithCode(http.StatusNotFound, "User has no friend")
+	}
+
+	return friends, err
 }
 func (s *CayleyStore) CommonFriends(user1, user2 User) ([]User, error) {
 	var resCommonFriends []User
@@ -169,16 +176,20 @@ func (s *CayleyStore) CommonFriends(user1, user2 User) ([]User, error) {
 		resCommonFriends = append(resCommonFriends, User(quad.NativeOf(value).(string)))
 	})
 
+	if len(resCommonFriends) == 0{
+		return resCommonFriends, errors.NewWithCode(404,"No common friend found")
+	}
+
 	return resCommonFriends, nil
 }
 func (s *CayleyStore) SubscribeTo(subscriber, subscribed User) error {
 	_, err := s.getUserId(subscriber)
 	if err != nil {
-		return err
+		return errors.NewWithCode(404, "User (subscriber) not registered")
 	}
 	_, err = s.getUserId(subscribed)
 	if err != nil {
-		return err
+		return errors.NewWithCode(404, "User (subscribed) not registered")
 	}
 
 	s.quadStore.AddQuad(quad.Make(quad.String(subscriber), rSubscribeTo, quad.String(subscribed), nil))

@@ -35,8 +35,8 @@ func (app *App) Initialize() {
 	app.initRoutes()
 }
 
-func (app *App) dataPreload(){
-	
+func (app *App) dataPreload() {
+
 	u := make(map[string]string)
 	u["bob"] = "bob@example.com"
 	u["alice"] = "alice@example.com"
@@ -52,14 +52,14 @@ func (app *App) dataPreload(){
 		app.DB.AddUser(model.User(v))
 	}
 
-	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["alice"]))
-	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["charlie"]))
-	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["dani"]))
-	app.DB.ConnectAsFriend(model.User(u["bob"]),model.User(u["fred"]))
-	app.DB.ConnectAsFriend(model.User(u["charlie"]),model.User(u["dani"]))
-	app.DB.ConnectAsFriend(model.User(u["greg"]),model.User(u["dani"]))
-	app.DB.ConnectAsFriend(model.User(u["fred"]),model.User(u["greg"]))
-	app.DB.ConnectAsFriend(model.User(u["fred"]),model.User(u["emily"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]), model.User(u["alice"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]), model.User(u["charlie"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]), model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["bob"]), model.User(u["fred"]))
+	app.DB.ConnectAsFriend(model.User(u["charlie"]), model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["greg"]), model.User(u["dani"]))
+	app.DB.ConnectAsFriend(model.User(u["fred"]), model.User(u["greg"]))
+	app.DB.ConnectAsFriend(model.User(u["fred"]), model.User(u["emily"]))
 }
 
 func (app *App) initRoutes() {
@@ -68,7 +68,7 @@ func (app *App) initRoutes() {
 	router.HandleFunc("/connect", app.ConnectAsFriend)
 	router.HandleFunc("/friend-list", app.GetFriendList)
 	router.HandleFunc("/common-friends", app.GetCommonFriends)
-	router.HandleFunc("/subscribe", app.Subsribe)
+	router.HandleFunc("/subscribe", app.Subscribe)
 	router.HandleFunc("/block", app.Block)
 	router.HandleFunc("/post-update", app.PostUpdate)
 	router.Use(jsonMiddleware)
