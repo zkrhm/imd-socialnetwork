@@ -177,6 +177,8 @@ func (app *App) ListSubscribers(w http.ResponseWriter, r *http.Request){
 			Message : err.Error(),
 			Success: false,
 		})
+
+		return 
 	}
 
 	subscribers, err := app.DB.GetFriendList(User(reqObj.Email))
@@ -187,6 +189,8 @@ func (app *App) ListSubscribers(w http.ResponseWriter, r *http.Request){
 			Message: err.Error(),
 
 		})
+
+		return
 	}
 
 	helper.WriteReponse(w, SubscriberListResponse{

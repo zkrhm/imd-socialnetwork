@@ -2,7 +2,6 @@ package helper
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"github.com/oleiade/reflections"
@@ -21,6 +20,7 @@ func GetRequest(r *http.Request, reqObj interface{}) error {
 
 func WriteReponse(w http.ResponseWriter, resObj interface{}) error {
 
+	w.Header().Set("Content-Type", "application/json")
 	
 	hasField , err := reflections.HasField(resObj, "Code")
 	if err != nil {
@@ -50,7 +50,9 @@ func WriteReponse(w http.ResponseWriter, resObj interface{}) error {
 	if err != nil {
 		return err
 	}
-	w.Header().Set("Content-type", "application/json")
-	fmt.Fprintln(w, string(b))
+	
+	
+	w.Write(b)
+	
 	return nil
 }
