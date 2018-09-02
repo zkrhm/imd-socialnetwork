@@ -1,23 +1,75 @@
 package main_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
-
-	. "github.com/zkrhm/imd-socialnetwork"
+	"github.com/zkrhm/imd-socialnetwork/app"
+	. "github.com/zkrhm/imd-socialnetwork/model"
 	"github.com/zkrhm/imd-socialnetwork/db"
+	. "github.com/zkrhm/imd-socialnetwork/testhelper"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	// . "github.com/Benjamintf1/ExpandedUnmarshalledMatchers"
 )
 
+const(
+	bob = "bob@example.com"
+	alice = "alice@example.com"
+	greg = "greg@example.com"
+	fred = "fred@example.com"
+	emily = "emily@example.com"
+	dani = "dani@example.com"
+	charlie = "charlie@example.com"
+	jonathan = "jonathan@example.com"
+	maria = "maria@example.com"
+	notUser = "notuser@example.com"
+	notEmail = "not-email-addr"
+)
+
+
+
 var _ = Describe("Friend Management Specs", func() {
+
+	Describe("HELPER method - testing helper endpoints", func(){
+
+		app := app.NewApp()
+		store, _ := db.NewCayleyStore()
+		app.UseDb(store)
+		app.Initialize()
+
+		Context("GET SUBSCRIBERS - ", func(){
+			It("returns all of subscribers", func(){
+				By("using bob@example.com as parameter")
+
+				const reqBody = `{
+					"email": "bob@example.com"
+				}`
+				test := NewHttpTest("POST","/subscribers",reqBody,app.ListSubscribers)
+				rr , err := test.DoRequestTest()
+				
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(rr.Code).Should(Equal(200))
+				resObj := &SubscriberListResponse{}
+				json.Unmarshal([]byte(rr.Body.String()),resObj)
+				Expect(resObj.Subscribers).Should(
+					ConsistOf([]string{
+						alice,
+						charlie,
+						dani,
+						fred,
+					}),
+				)
+
+			})
+		})
+	})
 	Describe("R1 - As a user I need to create friend connection between two email addresses", func() {
 
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
@@ -85,12 +137,6 @@ var _ = Describe("Friend Management Specs", func() {
 			})
 		})
 
-		PContext("Connecting already connected two user", func() {
-			It("Complains that users already friends", func() {
-
-			})
-		})
-
 		Context("Connecting non-existent user", func() {
 			It("Complains that non-existent user are not available on the system", func() {
 				rr := httptest.NewRecorder()
@@ -114,29 +160,31 @@ var _ = Describe("Friend Management Specs", func() {
 			})
 		})
 
-		PContext("Connecting blocked users", func() {
+		Context("Connecting blocked users", func() {
 
 			It("Throws error that the user cannot be connected because of blockage", func() {
 
-				rr := httptest.NewRecorder()
-				const reqBody = `{
-					"friends": ["bob@example.com","maria@example.com"]
-				}`
-				req, err := http.NewRequest("POST", "/connect", strings.NewReader(reqBody))
+				By("user maria who have not been bob's user doing block")
+
+				res, err := DoBlock(app, maria, bob)
 				Expect(err).ShouldNot(HaveOccurred())
-				handler.ServeHTTP(rr, req)
+				Expect(res.Success).Should(BeTrue())
 
-				const expectedResponse = `{
+				By("checking status of doing connect, should be false ")
 
-				}`
-				Expect(rr.Code).To(Equal(http.StatusForbidden))
+				res2, err := DoConnect(app, bob, maria)
+				// fmt.Println(res2.Message)
+				Expect(res2.Code).Should(Equal(http.StatusForbidden))
+				
+				Expect(res2.Success).Should(BeFalse())
+
 			})
 		})
 	})
 
 	Describe("R2 - I need to retrieve friend list of an email user", func() {
 
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
@@ -211,7 +259,7 @@ var _ = Describe("Friend Management Specs", func() {
 	})
 
 	Describe("R3 - I need to retrieve common friends between two email address", func() {
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
@@ -291,7 +339,7 @@ var _ = Describe("Friend Management Specs", func() {
 
 	Describe("R4 - I need API to subscribe to updates from email address", func() {
 
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
@@ -360,7 +408,7 @@ var _ = Describe("Friend Management Specs", func() {
 
 	Describe("R5 - I need an API to block updates from an email address", func() {
 
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
@@ -375,7 +423,7 @@ var _ = Describe("Friend Management Specs", func() {
 					Expect(err).ShouldNot(HaveOccurred())
 					handler.ServeHTTP(rr, req)
 	
-					fmt.Println("http response:",rr.Body.String())
+					// fmt.Println("http response:",rr.Body.String())
 
 					Expect(err).ShouldNot(HaveOccurred())
 					Expect(rr.Code).To(Equal(200))
@@ -388,7 +436,7 @@ var _ = Describe("Friend Management Specs", func() {
 				Expect(err).ShouldNot(HaveOccurred())
 				handler.ServeHTTP(rr, req)
 
-				fmt.Println("http response:",rr.Body.String())
+				// fmt.Println("http response:",rr.Body.String())
 
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(rr.Code).To(Equal(200))
@@ -398,53 +446,86 @@ var _ = Describe("Friend Management Specs", func() {
 		
 	})
 
+	
+
 	Describe("R6 - I need an API to retrieve all email address that can receive update from an email address", func() {
-		app := NewApp()
+		app := app.NewApp()
 		store, _ := db.NewCayleyStore()
 		app.UseDb(store)
 		app.Initialize()
-		handler := http.HandlerFunc(app.PostUpdate)
 
 		Context("Normal Flow", func() {
-			It("returns list of subscrbers", func() {
-				By("blocking non-friend user")
-					rr := httptest.NewRecorder()
-					const reqBody = `{
-						"sender":"bob@example.com", 
-						"text":"Hello Folks!"
-					}`
-					req, err := http.NewRequest("POST", "/post-update", strings.NewReader(reqBody))
-					Expect(err).ShouldNot(HaveOccurred())
-					handler.ServeHTTP(rr, req)
-	
-					fmt.Println("http response:",rr.Body.String())
 
-					Expect(err).ShouldNot(HaveOccurred())
-					Expect(rr.Code).To(Equal(200))
+			It("list all friend as recipient if no one mentioned in the message", func() {
+				By(fmt.Sprint("sending messages from",bob," without any mentions"))
+
+					res := PostUpdating(app,bob,"Hello Folks")
+					Expect(res.Recipients).Should(ConsistOf([]string{alice,charlie,dani,fred}))
 			})
 
-			PIt("Includes not-blocked user in the result", func() {
+			It("Exclude friend who blocking user who the update in the result", func() {
+
+				By("user alice who is bob's friend block bob")
+
+				res , _ := DoBlock(app, alice, bob)
+				// Expect(err).ShouldNot(HaveOccurred())
+				Expect(res.Success).Should(BeTrue())
+
+
+				By("checking who is included as recipients, alice should not be included")
+				
+				res2 := PostUpdating(app,bob,"Hello Everyone")
+				
+				Expect(res2.Recipients).ShouldNot(ContainElement(alice))
 
 			})
 
-			PIt("Includes subscribed user in the result", func() {
+			It("Includes subscribed user who is not a friend", func() {
 
+				By("user maria who is not a friend of bob doing subscribe")
+				subReq , err := (&SubscribeRequest{
+					Requestor : maria,
+					Target: bob,
+				}).Marshal()
+				Expect(err).ShouldNot(HaveOccurred())
+
+				subReqObj := NewHttpTest("POST","/subscribe",string(subReq),app.Subscribe)
+				rr, err := subReqObj.DoRequestTest()
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(rr.Code).Should(Equal(http.StatusOK))
+
+				By("user bob post an update without mentioning anyone, maria should be listed")
+				res := PostUpdating(app, bob, "Hello Everyone!")
+				
+				Expect(res.Recipients).Should(ContainElement(maria))
+				
 			})
 
-			PIt("Includes user who is mentioned in an update", func() {
-
+			It("Includes registered user who is mentioned in an update, even not a friend", func() {
+				res := PostUpdating(app, bob, fmt.Sprint("How are you ",charlie,". long time no see!"))
+				Expect(res.Recipients).Should(ContainElement(charlie))
 			})
+
+			It("Excludes non-registerd user who is mentioned in an update", func(){
+				res := PostUpdating(app, bob, fmt.Sprint("How are you ",notUser,". long time no see!"))
+				Expect(res.Recipients).ShouldNot(ContainElement(notUser))
+			})
+
+
 		})
 
-		PContext("Alternate Flow - user with no subscribers", func() {
+		Context("Alternate Flow - user with no subscribers", func() {
 			It("returns empty set of subscriber", func() {
-
+				res := PostUpdating(app, maria, "Hello No one")
+				Expect(res.Recipients).Should(BeEmpty())
 			})
 		})
 
-		PContext("Alternate FLow - requesting subscribers of non existing email address", func() {
+		Context("Alternate FLow - requesting subscribers of non existing email address", func() {
 			It("Throws error that the requested email address is non existent", func() {
-
+				res := PostUpdating(app, notUser, "Hello Not a user")
+				Expect(res.Success).To(BeFalse())
+				Expect(res.Code).To(Equal(http.StatusNotFound))
 			})
 		})
 	})
