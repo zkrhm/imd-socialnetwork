@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "8b0fff26-0044-4ffa-ae7d-21306126c2d8",
+		"name": "imd-socmed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Subscribers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"bob@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/list-subscriber",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"list-subscriber"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Friend List",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"bob@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/friend-list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"friend-list"
+					]
+				},
+				"description": "get friend list."
+			},
+			"response": []
+		},
+		{
+			"name": "Common Friend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"friends\": [\n\t\t\"charlie@example.com\",\n\t\t\"fred@example.com\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/common-friends",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"common-friends"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor\": \"maria@example.com\",\n\t\"target\": \"bob@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/subscribe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Block",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor\": \"alice@example.com\",\n\t\"target\": \"bob@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/block",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"block"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"sender\":\"bob@example.com\",\n\t\"text\": \"Hello World...!!!\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/post-update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"post-update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "connect-as-friend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"friends\": [\n\t\t\"bob@example.com\",\n\t\t\"maria@example.com\"\n\t\t\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/connect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"connect"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
