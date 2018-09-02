@@ -1,3 +1,5 @@
 language: go
 go:
   - "1.10.x"
+env:
+  - CODECOV_TOKEN="a885dc1b-849a-48fd-9d7e-594fb2068021"
