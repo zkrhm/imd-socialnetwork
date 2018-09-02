@@ -1,7 +1,6 @@
-package main
+package app
 
 import (
-	"io/ioutil"
 	"fmt"
 	"net/http"
 
@@ -52,9 +51,8 @@ func (app *App) ConnectAsFriend(res http.ResponseWriter, req *http.Request) {
 
 		return
 	}
-
+	
 	helper.WriteReponse(res, ConnectFriendResponse{Success: true})
-
 }
 
 func (app *App) GetFriendList(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +156,7 @@ func (app *App) Subscribe(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (app *App) Subscriber(w http.ResponseWriter, r *http.Request){
+func (app *App) ListSubscribers(w http.ResponseWriter, r *http.Request){
 	reqObj := &SubscriberListRequest{}
 	err := helper.GetRequest(r, reqObj)
 
@@ -202,10 +200,6 @@ func (app *App) Block(w http.ResponseWriter, r *http.Request) {
 	reqObj := &BlockRequest{}
 	err := helper.GetRequest(r, reqObj)
 
-	b, err := ioutil.ReadAll(r.Body)
-	fmt.Println("ioutil err :",err)
-	fmt.Println("request body: ",string(b))
-	defer r.Body.Close()
 	if err != nil {
 		helper.WriteReponse(w, BlockResponse{
 			Code : http.StatusUnprocessableEntity,
@@ -215,8 +209,6 @@ func (app *App) Block(w http.ResponseWriter, r *http.Request) {
 		return 
 	}
 
-	fmt.Println("request object :", reqObj.Requestor, ".target:",reqObj.Target)
-	// check format
 	err1 := checkmail.ValidateFormat(reqObj.Requestor)
 	err2 := checkmail.ValidateFormat(reqObj.Target)
 	
@@ -255,16 +247,18 @@ func (app *App) PostUpdate(w http.ResponseWriter, r *http.Request) {
 			Message: "Invalid email format",
 			Success: false,
 		})
+		return 
 	}
 
 	recipients, err := app.DB.DoUpdate(User(reqObj.Sender), reqObj.Text)
 
 	if err != nil {
 		helper.WriteReponse(w, UpdateResponse{
-			Code:    http.StatusInternalServerError,
+			Code:    err.(*errors.ErrorWithCode).Code(),
 			Message: err.Error(),
 			Success: false,
 		})
+		return 
 	}
 
 	helper.WriteReponse(w, UpdateResponse{

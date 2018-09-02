@@ -106,9 +106,11 @@ func (s *CayleyStore) ConnectAsFriend(user1, user2 User) error {
 	if err != nil {
 		return err
 	}
+
 	if blocking {
 		return errors.NewWithCode(http.StatusForbidden, "cannot connect as friend user 1 is blocking user 2")
 	}
+	
 	blocking, err = s.isBlocking(user2, user1)
 	if err != nil {
 		return err
@@ -232,9 +234,13 @@ func (s *CayleyStore) getMentions(message string) ([]User, error) {
 
 func (s *CayleyStore) DoUpdate(sender User, message string) ([]User, error) {
 
+	var recipients []User
+	recipients = []User{}
+
 	if len(message) <= 0 {
 		return nil, errors.New("empty message is not allowed")
 	}
+	
 	mentionedUsers, err := s.getMentions(message)
 	status := &Status{
 		Message:  message,
@@ -250,7 +256,7 @@ func (s *CayleyStore) DoUpdate(sender User, message string) ([]User, error) {
 		return nil, err
 	}
 
-	var recipients []User
+	
 
 	recipients = append(recipients, mentionedUsers...)
 	recipients = append(recipients, subscribers...)

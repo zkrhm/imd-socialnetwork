@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"fmt"
@@ -69,6 +69,7 @@ func (app *App) initRoutes() {
 	router.HandleFunc("/friend-list", app.GetFriendList)
 	router.HandleFunc("/common-friends", app.GetCommonFriends)
 	router.HandleFunc("/subscribe", app.Subscribe)
+	router.HandleFunc("/list-subscriber", app.ListSubscribers)
 	router.HandleFunc("/block", app.Block)
 	router.HandleFunc("/post-update", app.PostUpdate)
 	router.Use(jsonMiddleware)

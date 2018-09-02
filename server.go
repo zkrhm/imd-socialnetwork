@@ -2,10 +2,11 @@ package main
 
 import (
 	"github.com/zkrhm/imd-socialnetwork/db"
+	"github.com/zkrhm/imd-socialnetwork/app"
 )
 
 func main() {
-	app := NewApp()
+	app := app.NewApp()
 	db, err := db.NewCayleyStore()
 	if err != nil {
 		panic("DB initialization is failed")

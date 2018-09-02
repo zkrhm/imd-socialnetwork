@@ -33,12 +33,12 @@ func WriteReponse(w http.ResponseWriter, resObj interface{}) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("has code field, code value : ", val.(int))
+		// fmt.Println("has code field, code value : ", val.(int))
 
 		code := val.(int)
-
+		// fmt.Println("code value : %d, truth check %b", code, code == 0)
 		if(code == 0){
-			code = 200
+			code = http.StatusOK
 		}
 
 		w.WriteHeader(code)

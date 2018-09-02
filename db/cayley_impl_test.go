@@ -162,7 +162,7 @@ var _ = Describe("CayleyImpl - Implementation of db", func() {
 
 				store := cayleyStore
 
-				fmt.Println("All relations : ", store.ShowAllRelations())
+				// fmt.Println("All relations : ", store.ShowAllRelations())
 
 				charliesFriend, _ := store.GetFriendList("charlie@example.com")
 				fredsFriend, _ := store.GetFriendList("fred@example.com")

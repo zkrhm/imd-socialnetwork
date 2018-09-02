@@ -7,7 +7,7 @@ import (
 	. "github.com/zkrhm/imd-socialnetwork/model"
 )
 
-type Relation int
+type Relation int 
 type GraphAdjacent map[int]*list.List
 
 const (
