@@ -158,6 +158,46 @@ func (app *App) Subscribe(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (app *App) Subscriber(w http.ResponseWriter, r *http.Request){
+	reqObj := &SubscriberListRequest{}
+	err := helper.GetRequest(r, reqObj)
+
+	if err!= nil {
+		helper.WriteReponse(w,SubscriberListResponse{
+			Code: http.StatusUnprocessableEntity,
+			Message : err.Error(),
+			Success: false,
+		})
+
+		return
+	}
+
+	err = checkmail.ValidateFormat(reqObj.Email)
+	if err!= nil{
+		helper.WriteReponse(w,SubscriberListResponse{
+			Code : http.StatusUnprocessableEntity,
+			Message : err.Error(),
+			Success: false,
+		})
+	}
+
+	subscribers, err := app.DB.GetFriendList(User(reqObj.Email))
+
+	if err != nil {
+		helper.WriteReponse(w, SubscriberListResponse{
+			Code: err.(*errors.ErrorWithCode).Code(),
+			Message: err.Error(),
+
+		})
+	}
+
+	helper.WriteReponse(w, SubscriberListResponse{
+		Subscribers: ConvertToStringArray(subscribers),
+		Success: true,
+		Count : len(subscribers),
+	})
+}
+
 func (app *App) Block(w http.ResponseWriter, r *http.Request) {
 	reqObj := &BlockRequest{}
 	err := helper.GetRequest(r, reqObj)

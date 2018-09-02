@@ -46,6 +46,18 @@ type SubscribeResponse struct {
 	Code int `json:"code,omitempty"`
 }
 
+type SubscriberListRequest struct {
+	Email string `json:"email"`
+}
+
+type SubscriberListResponse struct {
+	Success bool `json:"success"`
+	Subscribers []string `json:"subscribers"`
+	Count int `json:"count,omitempty"`
+	Code int `json:"code,emitempty"`
+	Message string `json:"message,omitempty"`
+}
+
 type BlockRequest struct {
 	Requestor string `json:"requestor"`
 	Target    string `json:"target"`
